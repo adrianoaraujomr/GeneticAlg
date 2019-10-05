@@ -30,13 +30,13 @@ end
 
 
 class Roulette
-	@population     = nil
-	@selection_rate = 0.6
-
-	def initialize(pop,sr)
-		@population     = pop
-		@selection_rate = sr 
-	end
+#	@population     = nil
+#	@selection_rate = 0.6
+#
+#	def initialize(pop,sr)
+#		@population     = pop
+#		@selection_rate = sr 
+#	end
 
 	def probabilities()
 		sum = @population.inject(0){|sum,x| sum + x }
@@ -51,12 +51,14 @@ class Roulette
 		return probs.reverse
 	end
 
-	def run()
+	def run(pop,sr)
+		@population     = pop
+		@selection_rate = sr
+
 		n_sorteios = @selection_rate*@population.length
 		n_sorteios = n_sorteios.round
 
 		probs = self.probabilities()
-
 		selected = Array.new
 
 		for i in 1..n_sorteios do
