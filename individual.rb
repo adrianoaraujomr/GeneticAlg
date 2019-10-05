@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 
 # Individual 01
-#	-x² + 5x - 16
+#	minimizar -x² + 5x - 16
 
 $limit = 100
 
@@ -9,7 +9,7 @@ class IndividualCube
 	attr_accessor :value
 
 	def initialize(value)
-		@value = rand value
+		@value = (rand value ) - value/2
 	end
 
 	def fitness()

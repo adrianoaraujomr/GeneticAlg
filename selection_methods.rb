@@ -5,15 +5,10 @@
 #	Retorna index dos selecionados
 
 class URandom
-	@population     = nil
-	@selection_rate = 0.6
-
-	def initialize(pop,sr)
+	def run(pop,sr)
 		@population     = pop
 		@selection_rate = sr 
-	end
 
-	def run()
 		n_sorteios = @selection_rate*@population.length
 		n_sorteios = n_sorteios.round
 
@@ -30,22 +25,17 @@ end
 
 
 class Roulette
-#	@population     = nil
-#	@selection_rate = 0.6
-#
-#	def initialize(pop,sr)
-#		@population     = pop
-#		@selection_rate = sr 
-#	end
-
+	# Probably will need changes, or changes in fitness will be necessary
 	def probabilities()
-		sum = @population.inject(0){|sum,x| sum + x }
+		min = @population.sort.pop
+		@population = @population.map{|x| (x - min)}
+		sum = @population.inject(0){|sum,x| sum + x.abs}
 
 		probs = Array.new
 		aux   = 0
 		for i in @population do
-			aux += i/sum
-			probs.push(aux)
+			aux += i.abs.fdiv(sum)
+			probs.push(1 - aux)
 		end
 
 		return probs.reverse
@@ -60,10 +50,9 @@ class Roulette
 
 		probs = self.probabilities()
 		selected = Array.new
-
 		for i in 1..n_sorteios do
 			aux = rand()
-			sl  = probs.rindex{|x| x >= aux} #maybe this will need to change
+			sl  = probs.rindex{|x| x < aux} #maybe this will need to change/ will return the last to satisfies the condition
 			selected.push(sl)
 		end
 

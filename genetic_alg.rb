@@ -15,7 +15,7 @@ class GeneticAlg
 		while true
 			eval = @population.fitness()
 			seld = @selection.run(eval,0.5)
-			puts seld
+			puts seld.inspect
 			# 4 - run crossing over
 			# @gen_operators.coito(@population)
 			# 5 - run mutation
@@ -27,8 +27,9 @@ class GeneticAlg
 end
 
 END {
-	pop = Population.new(10)
+	pop = Population.new(100)
 	sel = Roulette.new()
 	gen = GeneticAlg.new(pop,sel)
 	gen.run()
+
 }
