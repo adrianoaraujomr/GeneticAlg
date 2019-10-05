@@ -4,23 +4,26 @@ require "./selection_methods.rb"
 require "./individual.rb"
 
 class GeneticAlg
+	@@generations = 20
+
 	def initialize(pop,smethods)
-		# 1 - Create population
 		@population    = pop
 		@selection     = smethods
-#		@gen_operators = GenOperators.new()
 	end
 
 	def run()
-		while true
+		for i in 0..@@generations
 			eval = @population.fitness()
-			seld = @selection.run(eval,0.5)
-			puts seld.inspect
-			# 4 - run crossing over
-			# @gen_operators.coito(@population)
-			# 5 - run mutation
-			# @gen_operators.xmen(@population)
-			# 6 - change population
+			# Seleção
+			seld = @selection.run(eval,0.625)
+			# Cruzamento/Combinação
+			for i in 1..(seld.length - 1)
+				@population.people[seld[i - 1]].crossing(@population.people[seld[i]])
+			end
+			# Mutação
+			for i in seld
+				@population.people[i].mutation
+			end
 			break
 		end
 	end

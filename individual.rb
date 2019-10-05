@@ -6,6 +6,9 @@
 $limit = 100
 
 class IndividualCube
+	@@prob_mutation = 0.2
+	@@prob_crossing = 0.8
+
 	attr_accessor :value
 
 	def initialize(value)
@@ -14,6 +17,18 @@ class IndividualCube
 
 	def fitness()
 		return (-1)*(@value**2) + 5*@value - 16
+	end
+
+	def mutation()
+		if rand() <= @@prob_mutation
+			@value = @value - 1
+		end
+	end
+
+	def crossing(partner)
+		if rand() <= @@prob_crossing
+			@value = (@value + partner.value)/2
+		end
 	end
 end
 
