@@ -2,9 +2,10 @@
 
 require "./selection_methods.rb"
 require "./individual.rb"
+require 'gruff'
 
 class GeneticAlg
-	@@generations = 20
+	@@generations = 20000
 
 	def initialize(pop,smethods)
 		@population    = pop
@@ -12,27 +13,47 @@ class GeneticAlg
 	end
 
 	def run()
-		for i in 0..@@generations
+		for i in 0..@@generations do
+#			puts @population.pop_values().inspect
+
 			eval = @population.fitness()
 			# Seleção
 			seld = @selection.run(eval,0.625)
+
+#			puts eval.inspect
+#			puts seld.inspect
+
 			# Cruzamento/Combinação
-			for i in 1..(seld.length - 1)
-				@population.people[seld[i - 1]].crossing(@population.people[seld[i]])
+			for j in 1..(seld.length - 1)
+				@population.people[seld[j - 1]].crossing(@population.people[seld[j]])
 			end
+#			puts @population.pop_values().inspect
+
 			# Mutação
-			for i in seld
-				@population.people[i].mutation
+			for j in seld
+				@population.people[j].mutation
 			end
-			break
+
+#			puts @population.pop_values().inspect
+			
+			best = @population.fitness().sort[0]
+
+			if i % 150 == 0
+				g = Gruff::Scatter.new
+				g.title = "Population #{i} : Best #{best}"
+				g.data('individuos', @population.pop_values(),@population.fitness())
+				g.write("./graphs/population#{i}.png")
+			end
+
+			n_ind = @population.pop_values().length
+			puts "Population #{i} : Best #{best} : Pop #{n_ind}"
 		end
 	end
 end
 
 END {
-	pop = Population.new(100)
-	sel = Roulette.new()
+	pop = Population.new(25)
+	sel = URandom.new()
 	gen = GeneticAlg.new(pop,sel)
 	gen.run()
-
 }

@@ -15,7 +15,7 @@ class URandom
 		selected = Array.new
 
 		for i in 1..n_sorteios do
-			aux = rand 100
+			aux = rand @population.length
 			selected.push(aux)
 		end
 
