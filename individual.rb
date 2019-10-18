@@ -1,5 +1,63 @@
 #!/usr/bin/ruby -w
 
+require "./file_to_hash"
+
+END{
+	SocialNetwork.new(10)
+}
+
+# Individual 02
+#	array of nodes
+
+class IndividualGraph
+	attr_accessor :feature
+
+	def initialize(keys)
+		val = rand(keys.size) + 1  # Maybe try a lower value
+		@feature = keys.sample(val)
+		puts val
+#		puts @feature.inspect
+	end
+
+	def fitness()
+		fit = Array.new()
+		fit.push(@feature.size,)
+	end
+
+end
+
+class SocialNetwork
+	@@graph = read_transform()
+
+
+	def show_graph()
+		return @@graph
+	end
+
+	def neighbours(nodes)
+		neigh = Set.new
+
+		for v in nodes
+			neigh.add(@@graph[v])
+		end
+
+		return neigh.size
+	end
+end
+
+class SPopulation
+	attr_accessor :people
+
+	def initialize(nro)
+		@people =  Array.new()
+
+		for i in 1..nro do
+			@people.push(IndividualGraph.new(@@graph.keys))
+		end
+	end
+
+end
+
 # Individual 01
 #	minimizar x² + 100x - 16
 
