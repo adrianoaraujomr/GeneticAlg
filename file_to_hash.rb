@@ -9,7 +9,7 @@ def read_transform()
 		nodes = line.split("[")[1]
 		nodes = nodes.gsub("\"","").gsub("]","").gsub("\'","").gsub("\r\n","")
 		nodes = nodes.split(",")
-		nodes = nodes.map{|x| x.to_i}
+#		nodes = nodes.map{|x| x.to_i}
 
 		hs[root] = nodes
 	end

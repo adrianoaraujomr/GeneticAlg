@@ -1,10 +1,43 @@
 #!/usr/bin/ruby -w
 
+require 'set'
 require "./file_to_hash"
 
-END{
-	SocialNetwork.new(10)
-}
+#END{
+#	$sonet = SocialNetwork.new
+#	pop    = SPopulation.new(10,$sonet.keys)
+#	puts "Fitness :"
+#	for i in pop.people do
+#		puts i.fitness($sonet).inspect
+#	end
+#}
+
+class SocialNetwork
+	@@graph = read_transform()
+
+	def show_graph()
+		return @@graph
+	end
+
+	def keys()
+		return @@graph.keys
+	end
+
+	def neighbours(nodes)
+		puts nodes.inspect
+		neigh = Set.new
+
+		puts "Nodes Followers :"
+		for v in nodes
+			aux = Set.new @@graph[v] 
+			neigh.merge aux
+		end
+		puts neigh.inspect
+		puts neigh.length
+
+		return neigh.length
+	end
+end
 
 # Individual 02
 #	array of nodes
@@ -13,47 +46,36 @@ class IndividualGraph
 	attr_accessor :feature
 
 	def initialize(keys)
-		val = rand(keys.size) + 1  # Maybe try a lower value
+#		val = rand(keys.size) + 1  # Maybe try a lower value
+		val = rand(10) + 1
 		@feature = keys.sample(val)
 		puts val
-#		puts @feature.inspect
+		puts @feature.inspect
 	end
 
-	def fitness()
+	def fitness(graph)
 		fit = Array.new()
-		fit.push(@feature.size,)
+		flw = graph.neighbours(@feature)
+		fit.push(@feature.size,flw)
+		
+		return fit
 	end
 
-end
-
-class SocialNetwork
-	@@graph = read_transform()
-
-
-	def show_graph()
-		return @@graph
-	end
-
-	def neighbours(nodes)
-		neigh = Set.new
-
-		for v in nodes
-			neigh.add(@@graph[v])
-		end
-
-		return neigh.size
-	end
 end
 
 class SPopulation
 	attr_accessor :people
 
-	def initialize(nro)
+	def initialize(nro,keys)
 		@people =  Array.new()
 
 		for i in 1..nro do
-			@people.push(IndividualGraph.new(@@graph.keys))
+			@people.push(IndividualGraph.new(keys))
 		end
+	end
+
+	def fitness(graph)
+		@people.map {|x| x.fitness(graph)}
 	end
 
 end
