@@ -45,6 +45,7 @@ end
 class IndividualGraph
 	attr_accessor :feature
 
+	# Mudar feature de Array para Set
 	def initialize(keys)
 #		val = rand(keys.size) + 1  # Maybe try a lower value
 		val = rand(10) + 1
@@ -59,6 +60,16 @@ class IndividualGraph
 		fit.push(@feature.size,flw)
 		
 		return fit
+	end
+
+	# sortear um ponto em cada vetor e fazer a troca das partes do vetor de cada individuo
+	def crossing()
+
+	end
+
+	# sortear entre (troca, remoção, adição de nos no vetor de individuo)
+	def mutation()
+
 	end
 
 end

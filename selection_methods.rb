@@ -60,7 +60,7 @@ class Roulette
 	end
 end
 
-=begin
+# Selecionar
 class Tournament
 	def initialize(pop,sr)
 		@population     = pop
@@ -68,4 +68,4 @@ class Tournament
 	end
 
 end
-=end
+
