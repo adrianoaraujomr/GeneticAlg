@@ -42,15 +42,30 @@ end
 class IndividualGraph
 	@@prob_mutation = 0.1
 	@@prob_crossing = 0.625
+	@@a             = 5
+	@@b             = 3
 	attr_accessor :feature
 
 	# Mudar feature de Array para Set
 	def initialize(keys)
 		@keys = keys
 #		val = rand(keys.size) + 1  # Maybe try a lower value
-		val = rand(5) + 3
+		val = rand(@@a) + @@b
 		@feature = keys.sample(val)
 	end
+
+	def prob_mutation()
+		return @@prob_mutation
+	end
+
+	def prob_crossing()
+		return @@prob_crossing
+	end
+
+	def range_val()
+		return [@@a,@@b]
+	end
+
 
 	def fitness(graph)
 		fit = Array.new()
@@ -140,6 +155,15 @@ class SPopulation
 		for i in 1..nro do
 			@people.push(IndividualGraph.new(keys))
 		end
+	end
+
+	def return_params()
+		pop_size = @people.length
+		cro_prob = @people[0].prob_crossing
+		mut_prob = @people[0].prob_mutation
+		rnge_val = @people[0].range_val
+
+		return [pop_size,cro_prob,mut_prob,rnge_val]
 	end
 
 	def update_population(children,graph)

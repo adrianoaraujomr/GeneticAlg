@@ -1,11 +1,12 @@
 #!/usr/bin/ruby -w
 
+require "./write_results.rb"
 require "./selection_methods.rb"
 require "./individual.rb"
 require 'gruff'
 
 class GeneticAlg
-	@@generations = 20000
+	@@generations = 50
 
 	def initialize(pop,smethods)
 		@population    = pop
@@ -13,9 +14,10 @@ class GeneticAlg
 	end
 
 	def run()
+		write_parameters(@population.return_params)
+
 		for i in 0..@@generations do
 			eval = @population.fitness($sonet)
-			puts eval.inspect
 
 			# Seleção
 			seld = @selection.run(eval,0.625)
@@ -37,8 +39,11 @@ class GeneticAlg
 
 			# Update population			
 			@population.update_population(aux,$sonet)
+
 			eval = @population.fitness($sonet)
+			# Write eval to file
 			puts eval.inspect
+			write_fitness(i,eval)
 
 #			if i % 150 == 0
 #				g = Gruff::Scatter.new
@@ -49,12 +54,13 @@ class GeneticAlg
 
 #			n_ind = @population.pop_values().length
 #			puts "Population #{i} : Best #{best} : Pop #{n_ind}"
-			break
 		end
+#		update_file()
 	end
 end
 
 END {
+	init_file()
 	$sonet = SocialNetwork.new
 
 	pop = SPopulation.new(5,$sonet.keys)
