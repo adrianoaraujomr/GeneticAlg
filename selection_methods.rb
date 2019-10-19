@@ -60,6 +60,18 @@ class Roulette
 	end
 end
 
+def Domination(first,second)
+	# Firts is dominant
+	if    (first[0] < second[0] and first[1] >= second[1]) or (first[1] > second[1] and first[0] <= second[0])
+		return 1
+	# Second is dominant
+	elsif (first[0] > second[0] and first[1] <= second[1]) or (first[1] < second[1] and first[0] >= second[0])
+		return 2
+	else
+		return 0
+	end
+end
+
 class Tournament
 # 1 in 2, change to m in n (m < n)
 # Try EVO format 3 in 8
@@ -77,15 +89,18 @@ class Tournament
 
 			#[0] - number of nodes
 			#[1] - number of distinct followers/friends
-			if    (first[0] < second[0] and first[1] >= second[1]) or (first[1] > second[1] and first[0] <= second[0])
+			dom = Domination(first,second)
+			case dom
+			when 1 then
 				aux.push(st)
-			elsif (first[0] > second[0] and first[1] <= second[1]) or (first[1] < second[1] and first[0] >= second[0])
+			when 2 then
 				aux.push(nd)
 			else
 				aux.push(st)
 				aux.push(nd)
 			end
 		end
+	return aux
 	end
 end
 

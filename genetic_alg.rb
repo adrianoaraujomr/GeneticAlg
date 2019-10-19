@@ -14,29 +14,31 @@ class GeneticAlg
 
 	def run()
 		for i in 0..@@generations do
-			puts @population.pop_values().inspect
+			eval = @population.fitness($sonet)
+			puts eval.inspect
 
-#			eval = @population.fitness($sonet)
 			# Seleção
-#			seld = @selection.run(eval,0.625)
-
-#			puts eval.inspect
-#			puts seld.inspect
-
+			seld = @selection.run(eval,0.625)
+			puts seld.inspect
 			# Cruzamento/Combinação
-#			for j in 1..(seld.length - 1)
-#				ret = @population.people[seld[j - 1]].crossing(@population.people[seld[j]])
-#			end
-#			puts @population.pop_values().inspect
+			aux = Set.new
+			for j in 1..(seld.length - 1)
+				ret = @population.people[seld[j - 1]].crossing(@population.people[seld[j]])
+				if !ret.nil? 
+					aux.merge ret
+				end
+			end
+			aux = aux.to_a
 
 			# Mutação
-#			for j in seld
-#				@population.people[j].mutation
-#			end
+			for j in seld
+				@population.people[j].mutation
+			end
 
-#			puts @population.pop_values().inspect
-			
-#			best = @population.fitness().sort[0]
+			# Update population			
+			@population.update_population(aux,$sonet)
+			eval = @population.fitness($sonet)
+			puts eval.inspect
 
 #			if i % 150 == 0
 #				g = Gruff::Scatter.new
