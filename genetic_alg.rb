@@ -14,46 +14,49 @@ class GeneticAlg
 
 	def run()
 		for i in 0..@@generations do
-#			puts @population.pop_values().inspect
+			puts @population.pop_values().inspect
 
-			eval = @population.fitness()
+#			eval = @population.fitness($sonet)
 			# Seleção
-			seld = @selection.run(eval,0.625)
+#			seld = @selection.run(eval,0.625)
 
 #			puts eval.inspect
 #			puts seld.inspect
 
 			# Cruzamento/Combinação
-			for j in 1..(seld.length - 1)
-				@population.people[seld[j - 1]].crossing(@population.people[seld[j]])
-			end
+#			for j in 1..(seld.length - 1)
+#				ret = @population.people[seld[j - 1]].crossing(@population.people[seld[j]])
+#			end
 #			puts @population.pop_values().inspect
 
 			# Mutação
-			for j in seld
-				@population.people[j].mutation
-			end
+#			for j in seld
+#				@population.people[j].mutation
+#			end
 
 #			puts @population.pop_values().inspect
 			
-			best = @population.fitness().sort[0]
+#			best = @population.fitness().sort[0]
 
-			if i % 150 == 0
-				g = Gruff::Scatter.new
-				g.title = "Population #{i} : Best #{best}"
-				g.data('individuos', @population.pop_values(),@population.fitness())
-				g.write("./graphs/population#{i}.png")
-			end
+#			if i % 150 == 0
+#				g = Gruff::Scatter.new
+#				g.title = "Population #{i} : Best #{best}"
+#				g.data('individuos', @population.pop_values(),@population.fitness())
+#				g.write("./graphs/population#{i}.png")
+#			end
 
-			n_ind = @population.pop_values().length
-			puts "Population #{i} : Best #{best} : Pop #{n_ind}"
+#			n_ind = @population.pop_values().length
+#			puts "Population #{i} : Best #{best} : Pop #{n_ind}"
+			break
 		end
 	end
 end
 
 END {
-	pop = Population.new(25)
-	sel = URandom.new()
+	$sonet = SocialNetwork.new
+
+	pop = SPopulation.new(5,$sonet.keys)
+	sel = Tournament.new()
 	gen = GeneticAlg.new(pop,sel)
 	gen.run()
 }

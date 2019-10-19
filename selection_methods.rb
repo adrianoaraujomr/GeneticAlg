@@ -60,12 +60,32 @@ class Roulette
 	end
 end
 
-# Selecionar
 class Tournament
-	def initialize(pop,sr)
-		@population     = pop
-		@selection_rate = sr 
-	end
+# 1 in 2, change to m in n (m < n)
+# Try EVO format 3 in 8
+	def run(pop,sr)
+		n_sorteios = sr*pop.length
+		n_sorteios = n_sorteios.round
 
+		aux = Array.new()
+		while aux.size <= n_sorteios
+			st  = rand(pop.length)
+			nd  = rand(pop.length)
+			
+			first  = pop[st]
+			second = pop[nd]
+
+			#[0] - number of nodes
+			#[1] - number of distinct followers/friends
+			if    (first[0] < second[0] and first[1] >= second[1]) or (first[1] > second[1] and first[0] <= second[0])
+				aux.push(st)
+			elsif (first[0] > second[0] and first[1] <= second[1]) or (first[1] < second[1] and first[0] >= second[0])
+				aux.push(nd)
+			else
+				aux.push(st)
+				aux.push(nd)
+			end
+		end
+	end
 end
 
