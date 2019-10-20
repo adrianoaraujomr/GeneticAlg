@@ -6,7 +6,7 @@ require "./individual.rb"
 require 'gruff'
 
 class GeneticAlg
-	@@generations = 50
+	@@generations = 20000
 
 	def initialize(pop,smethods)
 		@population    = pop
@@ -17,11 +17,12 @@ class GeneticAlg
 		write_parameters(@population.return_params)
 
 		for i in 0..@@generations do
+			puts i
 			eval = @population.fitness($sonet)
 
 			# Seleção
 			seld = @selection.run(eval,0.625)
-			puts seld.inspect
+#			puts seld.inspect
 			# Cruzamento/Combinação
 			aux = Set.new
 			for j in 1..(seld.length - 1)
@@ -42,20 +43,26 @@ class GeneticAlg
 
 			eval = @population.fitness($sonet)
 			# Write eval to file
-			puts eval.inspect
+#			puts eval.inspect
 			write_fitness(i,eval)
 
-#			if i % 150 == 0
-#				g = Gruff::Scatter.new
-#				g.title = "Population #{i} : Best #{best}"
-#				g.data('individuos', @population.pop_values(),@population.fitness())
-#				g.write("./graphs/population#{i}.png")
-#			end
+			if i % 150 == 0
+				nds = Array.new
+				flw = Array.new
+				for x in eval
+					nds.push(x[0])
+					flw.push(x[1])
+				end
+				g = Gruff::Scatter.new
+				g.title = "Population #{i}"
+				g.data('individuos',nds,flw)
+				g.write("./graphs/population#{i}.png")
+			end
 
 #			n_ind = @population.pop_values().length
 #			puts "Population #{i} : Best #{best} : Pop #{n_ind}"
 		end
-#		update_file()
+		update_file()
 	end
 end
 
@@ -63,7 +70,7 @@ END {
 	init_file()
 	$sonet = SocialNetwork.new
 
-	pop = SPopulation.new(5,$sonet.keys)
+	pop = SPopulation.new(100,$sonet.keys)
 	sel = Tournament.new()
 	gen = GeneticAlg.new(pop,sel)
 	gen.run()

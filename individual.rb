@@ -40,17 +40,17 @@ end
 #	array of nodes
 
 class IndividualGraph
-	@@prob_mutation = 0.1
+	@@prob_mutation = 0.2
 	@@prob_crossing = 0.625
-	@@a             = 5
-	@@b             = 3
+	@@a             = 50
+	@@b             = 30
 	attr_accessor :feature
 
 	# Mudar feature de Array para Set
 	def initialize(keys)
 		@keys = keys
-#		val = rand(keys.size) + 1  # Maybe try a lower value
-		val = rand(@@a) + @@b
+		val = rand(keys.size) + 1  # Maybe try a lower value
+#		val = rand(@@a) + @@b
 		@feature = keys.sample(val)
 	end
 
@@ -78,7 +78,11 @@ class IndividualGraph
 	# sortear entre (troca, remoção, adição de nos no vetor de individuo)
 	def mutation()
 		if rand() <= @@prob_mutation
-			idx = rand(3) + 1
+			if @feature.length <= 1 
+				idx = rand(2)
+			else
+				idx = rand(3)
+			end
 
 			case idx
 			when 1 then
@@ -90,10 +94,8 @@ class IndividualGraph
 					end
 				end 
 			when 2 then
-				if @feature.length > 1 
 					aux = rand(@feature.length)
 					@feature.delete_at(aux)
-				end
 			else
 				loop do
 					aux = @keys.sample
@@ -124,13 +126,13 @@ class IndividualGraph
 
 			f1 = Set.new p11
 			f2 = Set.new p22
-			puts f1.inspect
-			puts f2.inspect
+#			puts f1.inspect
+#			puts f2.inspect
 
 			f1.merge p21
 			f2.merge p12
-			puts f1.inspect
-			puts f2.inspect
+#			puts f1.inspect
+#			puts f2.inspect
 
 			# Run some test to see if duplicated values do not apper
 			f1 = f1.to_a
@@ -167,7 +169,7 @@ class SPopulation
 	end
 
 	def update_population(children,graph)
-		puts children.inspect
+#		puts children.inspect
 		j = 0
 
 		for i in 0..@people.length - 1
@@ -180,13 +182,13 @@ class SPopulation
 
 			case aux
 			when 1 then
-				puts "Change to children"
+#				puts "Change to children"
 				@people[i].feature = children[j]
 				j += 1
 			when 0 then
 				rnd = rand(2)
 				if rnd == 1
-					puts "Change to children"
+#					puts "Change to children"
 					@people[i].feature = children[j]
 					j += 1
 				end

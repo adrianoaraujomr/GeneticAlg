@@ -62,12 +62,17 @@ end
 
 def Domination(first,second)
 	# Firts is dominant
-	if    (first[0] < second[0] and first[1] >= second[1]) or (first[1] > second[1] and first[0] <= second[0])
+#	puts first.inspect
+#	puts second.inspect
+	if    (first[0] < second[0] and first[1] >= second[1]) or (first[1] > second[1] and first[0] <= second[0]) or (second[0] == 0)
+#		puts "Ret 1"
 		return 1
 	# Second is dominant
-	elsif (first[0] > second[0] and first[1] <= second[1]) or (first[1] < second[1] and first[0] >= second[0])
+	elsif (first[0] > second[0] and first[1] <= second[1]) or (first[1] < second[1] and first[0] >= second[0]) or (first[0] == 0)
+#		puts "Ret 2"
 		return 2
 	else
+#		puts "Ret 0"
 		return 0
 	end
 end
@@ -96,8 +101,12 @@ class Tournament
 			when 2 then
 				aux.push(nd)
 			else
-				aux.push(st)
-				aux.push(nd)
+				val = rand(2)
+				if val == 1
+					aux.push(st)
+				else
+					aux.push(nd)
+				end
 			end
 		end
 	return aux
