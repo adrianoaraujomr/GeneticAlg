@@ -62,6 +62,7 @@ end
 
 def Domination(first,second)
 	# Firts is dominant
+#	puts "Domination"
 #	puts first.inspect
 #	puts second.inspect
 	if    (first[0] < second[0] and first[1] >= second[1]) or (first[1] > second[1] and first[0] <= second[0]) or (second[0] == 0)

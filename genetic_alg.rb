@@ -18,7 +18,7 @@ class GeneticAlg
 
 		for i in 0..@@generations do
 			puts i
-			eval = @population.fitness($sonet)
+			eval = @population.fitness
 
 			# Seleção
 			seld = @selection.run(eval,0.625)
@@ -26,12 +26,12 @@ class GeneticAlg
 			# Cruzamento/Combinação
 #			aux = Set.new
 			for j in 1..(seld.length - 1)
-				ret = @population.people[seld[j - 1]].crossing(@population.people[seld[j]])
+				ret = @population.people[seld[j - 1]].crossing($sonet,@population.people[seld[j]])
 #				if !ret.nil? 
 #					aux.merge ret
 #				end
 			end
-			aux = aux.to_a
+#			aux = aux.to_a
 
 			# Mutação
 			for j in seld
@@ -41,12 +41,12 @@ class GeneticAlg
 			# Update population			
 #			@population.update_population(aux,$sonet)
 
-			eval = @population.fitness($sonet)
+			eval = @population.fitness
 			# Write eval to file
 #			puts eval.inspect
 			write_fitness(i,eval)
 
-			if i % 150 == 0
+			if i % 150 == 0 or i < 150
 				nds = Array.new
 				flw = Array.new
 				for x in eval
@@ -69,8 +69,7 @@ end
 END {
 	init_file()
 	$sonet = SocialNetwork.new
-
-	pop = SPopulation.new(100,$sonet.keys)
+	pop = SPopulation.new(25,$sonet)
 	sel = Tournament.new()
 	gen = GeneticAlg.new(pop,sel)
 	gen.run()
