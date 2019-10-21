@@ -42,15 +42,15 @@ end
 class IndividualGraph
 	@@prob_mutation = 0.2
 	@@prob_crossing = 0.625
-	@@a             = 50
-	@@b             = 30
+	@@a             = 5
+	@@b             = 3
 	attr_accessor :feature
 
 	# Mudar feature de Array para Set
 	def initialize(keys)
 		@keys = keys
-		val = rand(keys.size) + 1  # Maybe try a lower value
-#		val = rand(@@a) + @@b
+#		val = rand(keys.size) + 1  # Maybe try a lower value
+		val = rand(@@a) + @@b
 		@feature = keys.sample(val)
 	end
 
@@ -112,37 +112,86 @@ class IndividualGraph
 		end
 	end
 
-	# sortear um ponto em cada vetor e fazer a troca das partes do vetor de cada individuo
+	# Ideia 1 : sortear um ponto em cada vetor e fazer a troca das partes do vetor de cada individuo
+	# Ideia 2 : sortear algumas posições e fazer trocas (1 or more)
 	def crossing(partner)
 		if rand() <= @@prob_crossing
+			if Set.new(@feature) == Set.new(partner.feature)
+				return nil
+			end
+#			i = rand(@feature.length)
+#			p11 = @feature[0,i]
+#			p12 = @feature[i,@feature.length]
 
-			i = rand(@feature.length)
-			p11 = @feature[0,i]
-			p12 = @feature[i,@feature.length]
+#			j = rand(partner.feature.length)
+#			p21 = partner.feature[0,j]
+#			p22 = partner.feature[j,@feature.length]
 
-			j = rand(partner.feature.length)
-			p21 = partner.feature[0,j]
-			p22 = partner.feature[j,@feature.length]
-
-			f1 = Set.new p11
-			f2 = Set.new p22
+#			f1 = Set.new p11
+#			f2 = Set.new p22
 #			puts f1.inspect
 #			puts f2.inspect
 
-			f1.merge p21
-			f2.merge p12
+#			f1.merge p21
+#			f2.merge p12
 #			puts f1.inspect
 #			puts f2.inspect
 
 			# Run some test to see if duplicated values do not apper
-			f1 = f1.to_a
-			f2 = f2.to_a
+#			f1 = f1.to_a
+#			f2 = f2.to_a
 
-			ret = Array.new
-			ret.push(f1)
-			ret.push(f2)
+#			ret = Array.new
+#			ret.push(f1)
+#			ret.push(f2)
 
-			return ret
+#			return ret
+
+#		------------------------------------------------------------------------------------------
+
+			p1 = @feature
+			p2 = partner.feature
+
+			puts "Crossing "
+
+			puts p1.inspect
+			puts p2.inspect
+
+			aux1 = @feature.sample
+			while partner.feature.include? aux1 
+				aux1 = @feature.sample
+			end
+
+			aux2 = partner.feature.sample
+			while @feature.include? aux2
+				aux2 = partner.feature.sample
+			end
+
+			partner.feature.push(aux1)
+			@feature.push(aux2)
+
+			@feature.delete(aux1)
+			partner.feature.delete(aux2)
+
+			puts @feature.inspect
+			puts partner.feature.inspect
+
+			f1xp1 = Domination(p1,@feature)
+			f2xp2 = Domination(p2,partner.feature)
+
+			if f1xp1 == 1
+				@feature = p1
+			end 
+
+			if f2xp2 == 1
+				partner.feature = p2
+			end
+
+			puts @feature.inspect
+			puts partner.feature.inspect
+
+			return nil
+
 		end
 			return nil
 	end

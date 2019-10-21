@@ -24,12 +24,12 @@ class GeneticAlg
 			seld = @selection.run(eval,0.625)
 #			puts seld.inspect
 			# Cruzamento/Combinação
-			aux = Set.new
+#			aux = Set.new
 			for j in 1..(seld.length - 1)
 				ret = @population.people[seld[j - 1]].crossing(@population.people[seld[j]])
-				if !ret.nil? 
-					aux.merge ret
-				end
+#				if !ret.nil? 
+#					aux.merge ret
+#				end
 			end
 			aux = aux.to_a
 
@@ -39,7 +39,7 @@ class GeneticAlg
 			end
 
 			# Update population			
-			@population.update_population(aux,$sonet)
+#			@population.update_population(aux,$sonet)
 
 			eval = @population.fitness($sonet)
 			# Write eval to file
