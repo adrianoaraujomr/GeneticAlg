@@ -119,7 +119,7 @@ end
 #	array of nodes
 
 class IndividualGraph
-	@@prob_mutation = 0.1
+	@@prob_mutation = 0.01
 	@@prob_crossing = 0.8
 	@@a             = 1
 	@@b             = 3
@@ -196,7 +196,7 @@ class IndividualGraph
 		end
 	end
 
-	# More agressive mutation and simple
+	# More simple and agressive mutation
 	def mutation_2()
 		if rand() <= @@prob_mutation
 			nro = rand(10) + 10

@@ -25,14 +25,14 @@ class GeneticAlg
 			seld = @selection.run(eval,@@sr)
 
 			# Cruzamento/Combinação
-			@population.crossing_2(seld,$sonet)
-#			aux = @population.crossing_1(seld,$sonet)
+#			@population.crossing_2(seld,$sonet)
+			aux = @population.crossing_1(seld,$sonet)
 
 			# Mutação
 			@population.mutation_2(seld)
 
 			# Update population (only if crossing_1 is used)		
-#			@population.update_population(aux,$sonet)
+			@population.update_population(aux,$sonet)
 
 			eval = @population.fitness
 
