@@ -6,7 +6,8 @@ require "./individual.rb"
 require 'gruff'
 
 class GeneticAlg
-	@@generations = 20000
+	@@generations = 50000
+	@@sr = 0.8
 
 	def initialize(pop,smethods)
 		@population    = pop
@@ -21,31 +22,24 @@ class GeneticAlg
 			eval = @population.fitness
 
 			# Seleção
-			seld = @selection.run(eval,0.625)
-#			puts seld.inspect
+			seld = @selection.run(eval,@@sr)
+
 			# Cruzamento/Combinação
-#			aux = Set.new
-			for j in 1..(seld.length - 1)
-				ret = @population.people[seld[j - 1]].crossing($sonet,@population.people[seld[j]])
-#				if !ret.nil? 
-#					aux.merge ret
-#				end
-			end
-#			aux = aux.to_a
+			@population.crossing_2(seld,$sonet)
+#			aux = @population.crossing_1(seld,$sonet)
 
 			# Mutação
-			for j in seld
-				@population.people[j].mutation
-			end
+			@population.mutation_2(seld)
 
-			# Update population			
+			# Update population (only if crossing_1 is used)		
 #			@population.update_population(aux,$sonet)
 
 			eval = @population.fitness
+
 			# Write eval to file
-#			puts eval.inspect
 			write_fitness(i,eval)
 
+			# Graph of the population
 			if i % 150 == 0 or i < 150
 				nds = Array.new
 				flw = Array.new
@@ -58,9 +52,6 @@ class GeneticAlg
 				g.data('individuos',nds,flw)
 				g.write("./graphs/population#{i}.png")
 			end
-
-#			n_ind = @population.pop_values().length
-#			puts "Population #{i} : Best #{best} : Pop #{n_ind}"
 		end
 		update_file()
 	end

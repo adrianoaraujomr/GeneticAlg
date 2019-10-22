@@ -34,3 +34,13 @@ Dataset From : J. McAuley and J. Leskovec. Learning to Discover Social Circles i
 ### Observação
 
 * Olhar se o algoritmo esta com tendencia de so aumentar/diminuir nos ou se fica parado
+
+# To do
+
+### Selection
+
+* Implement EVO format
+
+### Mutation
+
+* More brute mutation (see if the solution space increase more)
