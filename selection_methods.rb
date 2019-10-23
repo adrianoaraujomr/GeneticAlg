@@ -4,6 +4,52 @@
 #	Recebe vetor de fitness
 #	Retorna index dos selecionados
 
+def Domination(first,second)
+	if    (first[0] < second[0] and first[1] >= second[1]) or (first[1] > second[1] and first[0] <= second[0]) or (second[0] == 0)
+		return 1
+	elsif (first[0] > second[0] and first[1] <= second[1]) or (first[1] < second[1] and first[0] >= second[0]) or (first[0] == 0)
+		return 2
+	else
+		return 0
+	end
+end
+
+class Tournament
+# 1 in 2, change to m in n (m < n)
+# Try EVO format 3 in 8
+	def run(pop,sr)
+		n_sorteios = sr*pop.length
+		n_sorteios = n_sorteios.round
+
+		aux = Array.new()
+		while aux.size <= n_sorteios
+			st  = rand(pop.length)
+			nd  = rand(pop.length)
+			
+			first  = pop[st]
+			second = pop[nd]
+
+			#[0] - number of nodes
+			#[1] - number of distinct followers/friends
+			dom = Domination(first,second)
+			case dom
+			when 1 then
+				aux.push(st)
+			when 2 then
+				aux.push(nd)
+			else
+				val = rand(2)
+				if val == 1
+					aux.push(st)
+				else
+					aux.push(nd)
+				end
+			end
+		end
+	return aux
+	end
+end
+
 class URandom
 	def run(pop,sr)
 		@population     = pop
@@ -60,57 +106,4 @@ class Roulette
 	end
 end
 
-def Domination(first,second)
-	# Firts is dominant
-#	puts "Domination"
-#	puts first.inspect
-#	puts second.inspect
-	if    (first[0] < second[0] and first[1] >= second[1]) or (first[1] > second[1] and first[0] <= second[0]) or (second[0] == 0)
-#		puts "Ret 1"
-		return 1
-	# Second is dominant
-	elsif (first[0] > second[0] and first[1] <= second[1]) or (first[1] < second[1] and first[0] >= second[0]) or (first[0] == 0)
-#		puts "Ret 2"
-		return 2
-	else
-#		puts "Ret 0"
-		return 0
-	end
-end
-
-class Tournament
-# 1 in 2, change to m in n (m < n)
-# Try EVO format 3 in 8
-	def run(pop,sr)
-		n_sorteios = sr*pop.length
-		n_sorteios = n_sorteios.round
-
-		aux = Array.new()
-		while aux.size <= n_sorteios
-			st  = rand(pop.length)
-			nd  = rand(pop.length)
-			
-			first  = pop[st]
-			second = pop[nd]
-
-			#[0] - number of nodes
-			#[1] - number of distinct followers/friends
-			dom = Domination(first,second)
-			case dom
-			when 1 then
-				aux.push(st)
-			when 2 then
-				aux.push(nd)
-			else
-				val = rand(2)
-				if val == 1
-					aux.push(st)
-				else
-					aux.push(nd)
-				end
-			end
-		end
-	return aux
-	end
-end
 
