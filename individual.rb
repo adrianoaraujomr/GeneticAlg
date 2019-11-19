@@ -5,7 +5,8 @@ require "./file_to_hash"
 require "./selection_methods.rb"
 
 class SocialNetwork
-	@@graph = read_transform()
+#	@@graph = read_transform()    # bigger graph
+	@@graph = edge_list_to_hash() # small graph x ant colony
 
 	def show_graph()
 		return @@graph
@@ -27,96 +28,74 @@ class SocialNetwork
 	end
 end
 
-class SPopulation
-	attr_accessor :people
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Individual 03
+#	minimum edge cover/set cover
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	def initialize(nro,graph)
-		@people =  Array.new()
+#class IndividualMEC
+#	@@prob_mutation = 0.1
+#	@@prob_crossing = 0.8
+#	attr_accessor :path
 
-		for i in 1..nro do
-			@people.push(IndividualGraph.new(graph))
-		end
-	end
+#	def initialize(node_list,graph)
+#		@path  = node_list
+#		@stop  = graph.neighbours(@path)
+#		@valid = graph.n_nodes
 
-	def mutation_1(seld)
-		for j in seld
-			@people[j].mutation_1
-		end
-	end
+#		while @stop == @valid
+#			j  = @path.sample
+#			rm = @path.delete(j)
+#			@stop = graph.neighbours(@path)
+#		end
+#		@path.push(rm)	
+#	end
 
-	def mutation_2(seld)
-		for j in seld
-			@people[j].mutation_2
-		end
-	end
+#	def fitness()
+#		return @path.size
+#	end
 
-	def crossing_1(seld,graph)
-		aux = Set.new
-		for j in 1..(seld.length - 1)
-			ret = @people[seld[j - 1]].crossing_1(graph,@people[seld[j]])
-			if !ret.nil? 
-				aux.merge ret
-			end
-		end
-		aux = aux.to_a
-		return aux
-	end
+#	def mutation(graph)
+#	end
 
-	def crossing_2(seld,graph)
-		for j in 1..(seld.length - 1)
-			@people[seld[j - 1]].crossing_2(graph,@people[seld[j]])
-		end
-	end
+#	def crossing(partner,graph)
+#	end
 
-	def return_params()
-		pop_size = @people.length
-		cro_prob = @people[0].prob_crossing
-		mut_prob = @people[0].prob_mutation
-		rnge_val = @people[0].range_val
+#	private
+#	def is_valid(path)
+#		if @valid == @path
+#			return True
+#		end
+#		return False
+#	end
+#end
 
-		return [pop_size,cro_prob,mut_prob,rnge_val]
-	end
+#class PopulationMEC
+#	attr_accessor :people
 
-	def update_population(children,graph)
-		j = 0
+#	def initialize(nro,graph)
+#		@people =  Array.new()
+#		@graph  = graph
 
-		for i in 0..@people.length - 1
-			if j == children.length
-				break
-			end
+#		for i in 1..nro do
+#			@people.push(IndividualMVC.new(graph.keys))
+#		end
+#	end
 
-			child_fit = [children[j].size,graph.neighbours(children[j])]
-			aux = Domination(child_fit,@people[i].fitness)
+#	def pop_values()
+#		@people.map {|x| x.path}
+#	end
 
-			case aux
-			when 1 then
-				@people[i].feature = children[j]
-				@people[i].fitness = child_fit
-				j += 1
-			when 0 then
-				rnd = rand(2)
-				if rnd == 1
-					@people[i].feature = children[j]
-					@people[i].fitness = child_fit
-					j += 1
-				end
-			end
+#	def fitness()
+#		@people.map {|x| x.fitness}
+#	end
+#end
 
-		end
-	end
 
-	def pop_values()
-		@people.map {|x| x.feature}
-	end
-
-	def fitness()
-		@people.map {|x| x.fitness}
-	end
-
-end
-
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Individual 02
 #	array of nodes
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 class IndividualGraph
 	@@prob_mutation = 0.01
@@ -292,6 +271,96 @@ class IndividualGraph
 		return nil
 	end
 end
+
+
+class SPopulation
+	attr_accessor :people
+
+	def initialize(nro,graph)
+		@people =  Array.new()
+
+		for i in 1..nro do
+			@people.push(IndividualGraph.new(graph))
+		end
+	end
+
+	def mutation_1(seld)
+		for j in seld
+			@people[j].mutation_1
+		end
+	end
+
+	def mutation_2(seld)
+		for j in seld
+			@people[j].mutation_2
+		end
+	end
+
+	def crossing_1(seld,graph)
+		aux = Set.new
+		for j in 1..(seld.length - 1)
+			ret = @people[seld[j - 1]].crossing_1(graph,@people[seld[j]])
+			if !ret.nil? 
+				aux.merge ret
+			end
+		end
+		aux = aux.to_a
+		return aux
+	end
+
+	def crossing_2(seld,graph)
+		for j in 1..(seld.length - 1)
+			@people[seld[j - 1]].crossing_2(graph,@people[seld[j]])
+		end
+	end
+
+	def return_params()
+		pop_size = @people.length
+		cro_prob = @people[0].prob_crossing
+		mut_prob = @people[0].prob_mutation
+		rnge_val = @people[0].range_val
+
+		return [pop_size,cro_prob,mut_prob,rnge_val]
+	end
+
+	def update_population(children,graph)
+		j = 0
+
+		for i in 0..@people.length - 1
+			if j == children.length
+				break
+			end
+
+			child_fit = [children[j].size,graph.neighbours(children[j])]
+			aux = Domination(child_fit,@people[i].fitness)
+
+			case aux
+			when 1 then
+				@people[i].feature = children[j]
+				@people[i].fitness = child_fit
+				j += 1
+			when 0 then
+				rnd = rand(2)
+				if rnd == 1
+					@people[i].feature = children[j]
+					@people[i].fitness = child_fit
+					j += 1
+				end
+			end
+
+		end
+	end
+
+	def pop_values()
+		@people.map {|x| x.feature}
+	end
+
+	def fitness()
+		@people.map {|x| x.fitness}
+	end
+
+end
+
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Individual 01

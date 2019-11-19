@@ -1,5 +1,23 @@
 #!/usr/bin/ruby -w
 
+def edge_list_to_hash()
+	hs = Hash.new
+	fd = File.new("./Graphs/benchmark_graph_1.txt","r")
+
+	while (line = fd.gets)
+		edge        = line.split(" ")
+
+		if not hs.keys.include? edge[0]
+			hs[edge[0]] = Array.new()
+		end
+		if not hs.keys.include? edge[1]
+			hs[edge[1]] = Array.new()
+		end
+		hs[edge[0]].push(edge[1])
+	end
+	return hs
+end
+
 def read_transform()
 	hs = Hash.new
 	fd = File.new("./graph_2.csv", "r")
